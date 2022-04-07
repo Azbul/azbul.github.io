@@ -107,8 +107,65 @@ Set the type and color theme here - the Pro version contains additional themes -
 		
 		<div class="small-12 medium-12 large-12 columns">
 			<h3> Полезное</h3>
-			<p align="justify"> Необходимо было реализовать асинхронный запуск задачи со STA потоком. Привычный асинхронный вызов оказался не рабочим (т.к. асинхронный вызов заворачивается в новый таск, который не является STA). В итоге решение нашлось, вдруг кому понадобится:
-			<a href="https://azbul.github.io/notes.html" target="_blank">ТЫК <i class="fa fa-external-link"></i></a></p>
+			<p align="justify"> 
+			Необходимо было реализовать асинхронный запуск задачи со STA потоком. Привычный асинхронный вызов оказался не рабочим (т.к. асинхронный вызов заворачивается в новый таск, который не является STA). Решение - запуск потока в асинхронной задаче, установив потоку ApartmentState.STA:
+						
+			<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt'><span
+			class=GramE><span lang=EN-US style='mso-ansi-language:EN-US'>private</span></span><span
+			lang=EN-US style='mso-ansi-language:EN-US'> async void CreateStaTaskAsync()<o:p></o:p></span></p>
+
+			<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt'><span
+			lang=EN-US style='mso-ansi-language:EN-US'>{<o:p></o:p></span></p>
+
+			<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt'><span
+			class=GramE><span lang=EN-US style='mso-ansi-language:EN-US'>await</span></span><span
+			lang=EN-US style='mso-ansi-language:EN-US'> Task.Run(() =&gt;<o:p></o:p></span></p>
+
+			<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt'><span
+			lang=EN-US style='mso-ansi-language:EN-US'><span
+			style='mso-spacerun:yes'>            </span>{<o:p></o:p></span></p>
+
+			<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt'><span
+			lang=EN-US style='mso-ansi-language:EN-US'><span
+			style='mso-spacerun:yes'>                </span>Thread worker = new <span
+			class=GramE>Thread(</span><o:p></o:p></span></p>
+
+			<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt'><span
+			lang=EN-US style='mso-ansi-language:EN-US'><span
+			style='mso-spacerun:yes'>                    </span><span class=GramE>delegate</span>
+			()<o:p></o:p></span></p>
+
+			<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt'><span
+			lang=EN-US style='mso-ansi-language:EN-US'><span
+			style='mso-spacerun:yes'>                    </span>{<o:p></o:p></span></p>
+
+			<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt'><span
+			lang=EN-US style='mso-ansi-language:EN-US'><span
+			style='mso-spacerun:yes'>                        </span>// </span>наш<span
+			style='mso-ansi-language:EN-US'> </span>код<span lang=EN-US style='mso-ansi-language:
+			EN-US'><o:p></o:p></span></p>
+
+			<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt'><span
+			lang=EN-US style='mso-ansi-language:EN-US'><span
+			style='mso-spacerun:yes'>                    </span>});<o:p></o:p></span></p>
+
+			<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt'><span
+			lang=EN-US style='mso-ansi-language:EN-US'><span
+			style='mso-spacerun:yes'>                </span>worker.SetApartmentState(ApartmentState.STA);<o:p></o:p></span></p>
+
+			<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt'><span
+			lang=EN-US style='mso-ansi-language:EN-US'><span
+			style='mso-spacerun:yes'>                </span></span><span class=SpellE>worker.Start</span>();</p>
+
+			<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt'><span
+			style='mso-spacerun:yes'>                </span><span class=SpellE>worker.Join</span>();</p>
+
+			<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt'><span
+			style='mso-spacerun:yes'>            </span>});</p>
+
+			<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt'>}</p>
+
+			</p>
 		</div>
 	</div>
 </div>
